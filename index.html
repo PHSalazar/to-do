@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.iconify.design/iconify-icon/1.0.2/iconify-icon.min.js"></script>
+  <link rel="stylesheet" href="./assets/style.css">
+  <title>To Do - Pedro Salazar</title>
+</head>
+<body>
+
+  <!-- Container Geral -->
+  <div id="container">
+    <!-- Header com imagem/gradiente -->
+    <div id="header">
+      <select name="filter" id="filter">
+        <option value="0">Todas</option>
+        <option value="1">Pendentes</option>
+        <option value="2">Concluídas</option>
+      </select>
+      <h2 id="title-header">Minhas Tarefas</h2>
+      <p id="num-task">0 tarefas</p>
+    </div>
+
+    <div id="list-tasks">
+      <!-- Itens da Lista de Tarefas -->
+
+      <!-- Item LToDo de Exemplo -->
+      <!-- <input type="checkbox" name="tar1" id="tar1">
+      <label for="tar1">
+        <div class="item-task">Tarefa</div>
+      </label>-->
+
+    </div>
+
+    <!-- Botão de Adicionar Novo Item -->
+    <div id="add-newTask">
+      <!-- Modal Adicionar Tarefa -->
+      <div id="modal">
+        <p id="close-modal">x</p>
+
+        <div id="form-newTask">
+          <p>Para adicionar mais de 1 tarefa de uma vez, digite os nomes separado-as com uma vírgula (,).</p>
+          <input id="name-task" type="text" placeholder="Nome da Nova Tarefa">
+          <button id="save-newTask">Salvar Tarefa</button>
+        </div>
+      </div>
+
+      <button id="btn-add-newTask"><iconify-icon icon="material-symbols:add-circle-rounded" style="color: #026c9c;" width="32"></iconify-icon> Adicionar uma tarefa</button>
+    </div>
+
+    <!-- Mensagem Popup no caso de adicionar ou outra mensagem -->
+    <div id="messages">
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script src="./assets/script.js"></script>
+</body>
+
+</html>
