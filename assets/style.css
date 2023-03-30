@@ -7,6 +7,7 @@
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif;
 }
+
 body {
   width: 100vw;
   height: 100vh;
@@ -36,10 +37,12 @@ body {
   padding: 10px;
   border-radius: 4px 4px 0 0;
 }
+
 #filter {
   align-self: end;
   width: fit-content;
 }
+
 #title-header {
   color: #fff;
   font-size: 2em;
@@ -49,11 +52,13 @@ body {
   display: flex;
   align-items: flex-end;
 }
+
 #num-task {
   font-weight: 100;
   font-size: 1em;
   color: #fff;
 }
+
 #list-tasks {
   background: #ededed;
   flex: 2;
@@ -65,37 +70,43 @@ body {
   padding: 10px 0;
   overflow-y: auto;
 }
-#list-tasks > input[type=checkbox] {
+
+#list-tasks>input[type=checkbox] {
   display: none;
 }
-#list-tasks > input[type=checkbox]:checked + label > .item-task {
+
+#list-tasks>input[type=checkbox]:checked+label>.item-task {
   opacity: .5;
   font-style: italic;
   text-decoration: line-through;
 }
 
-#list-tasks > input[type=checkbox] + label > .item-task > span.check {
+#list-tasks>input[type=checkbox]+label>.item-task>span.check {
   background: url(https://api.iconify.design/mdi/checkbox-blank-circle-outline.svg?color=%23007267) no-repeat center center / contain;
   width: 24px;
   height: 24px;
   display: flex;
 }
-#list-tasks > input[type=checkbox]:checked + label > .item-task > span.check {
+
+#list-tasks>input[type=checkbox]:checked+label>.item-task>span.check {
   background: url('https://api.iconify.design/ri/checkbox-circle-fill.svg?color=%23007267') no-repeat center center / contain;
 }
-#list-tasks > input[type=checkbox]:checked + label > .item-task > iconify-icon {
+
+#list-tasks>input[type=checkbox]:checked+label>.item-task>iconify-icon {
   display: none;
 }
+
 .hide {
- display: none !important;
+  display: none !important;
 }
 
-#list-tasks > label {
+#list-tasks>label {
   width: 90%;
   height: 60px;
   margin: 5px auto;
   cursor: pointer;
 }
+
 .item-task {
   padding: 20px;
   background: #fff;
@@ -104,9 +115,11 @@ body {
   align-items: center;
   gap: 5px;
 }
+
 .item-title {
   flex: 2;
 }
+
 #btn-add-newTask {
   background: #fff;
   border: none;
@@ -121,6 +134,7 @@ body {
   font-weight: 300;
   font-size: 1em;
 }
+
 #btn-add-newTask:disabled {
   opacity: .4;
 }
@@ -141,11 +155,13 @@ body {
   opacity: 0;
   visibility: hidden;
 }
+
 #modal.show {
   display: flex;
   opacity: 1;
   visibility: visible;
 }
+
 #close-modal {
   position: absolute;
   top: 10px;
@@ -156,6 +172,7 @@ body {
   font-weight: 100;
   cursor: pointer;
 }
+
 #form-newTask {
   padding: 20px;
   background: #fff;
@@ -166,7 +183,8 @@ body {
   width: 40vw;
   min-height: 40vh;
 }
-#form-newTask > p {
+
+#form-newTask>p {
   font-size: .9em;
   font-weight: 200;
   color: #6D6D6D;
@@ -174,6 +192,7 @@ body {
   font-style: italic;
   margin: 10px auto;
 }
+
 #name-task {
   padding: 15px;
   font-size: 1.1em;
@@ -181,6 +200,7 @@ body {
   border: 1px solid #c0c0c0;
   margin-top: 5px;
 }
+
 #save-newTask {
   background: green;
   color: #fff;
@@ -217,13 +237,20 @@ body {
   gap: 5px;
   transition: .6s;
 }
+
 .message.anim {
   animation: animaMessage 10s linear;
 }
+
 .message.error {
   background: orangered;
 }
-.message > button.close-popup {
+
+.message.suc {
+  background: green;
+}
+
+.message>button.close-popup {
   border: none;
   background: none;
   outline: none;
@@ -240,27 +267,34 @@ body {
   0% {
     bottom: -20vh;
   }
+
   10% {
     bottom: 20px;
   }
+
   20% {
     bottom: 20px;
   }
+
   30% {
     bottom: 20px;
   }
+
   40% {
     bottom: 20px;
     opacity: 1;
   }
+
   60% {
     opacity: 0.5;
     bottom: 20px;
   }
+
   80% {
     opacity: 0;
     bottom: 20px;
   }
+
   100% {
     opacity: 0;
     bottom: -20vh;
@@ -272,6 +306,6 @@ body {
 @media (max-width: 600px) {
   #form-newTask {
     width: 80%;
-    min-height: fit-content  !important;
+    min-height: fit-content !important;
   }
 }

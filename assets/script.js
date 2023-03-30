@@ -10,7 +10,9 @@ const filter = document.getElementById('filter');
 let itemsListStorage = JSON.parse(localStorage.getItem('tasks')) || [];
 
 // Function Add Task
-function addTask() {
+let ultItemClicado;
+
+function addTask(editar = undefined) {
   modal.classList.toggle('show');
 
   setTimeout(() => {
@@ -20,6 +22,25 @@ function addTask() {
       nameTask.focus();
     }
   }, 100);
+
+  //Verificar se NOME está undefined (criar nova tarefa)
+  if (editar != undefined) {
+    nameTask.value = editar.replaceAll('__', ' ');
+    ultItemClicado = editar;
+    saveTask.innerHTML = 'Editar Tarefa';
+    saveTask.setAttribute('f', 'edit');
+    document.querySelector(
+      '#form-newTask > p',
+    ).innerHTML = `Alterando a tarefa: <i><b><span id='original-name'>${editar}</span></b></i>`;
+  } else {
+    nameTask.value = '';
+    saveTask.setAttribute('f', 'add');
+    saveTask.innerHTML = 'Salvar Tarefa';
+    document.querySelector(
+      '#form-newTask > p',
+    ).innerHTML = `Para adicionar mais de 1 tarefa de uma vez, digite os nomes separado-as com uma vírgula (,).`;
+  }
+  // editar != undefined ? (nameTask.value = editar.replaceAll('__', ' ');console.log('')) : '';
 }
 
 //Click Add new Task
@@ -49,28 +70,38 @@ function save(val = undefined) {
   modal.classList.remove('show'); //Fechando Modal
 
   let msg, codeMsg; // Variavel da mensagem que será mostrado.
+  let original = document.querySelector('#original-name');
 
-  let queryExists = document.querySelector(`input#${val}`); //Query para verificar se já existe o item com o mesmo ID.
+  // let queryExists = itemsListStorage.findIndex(
+  //   (item) => item.item === originalName,
+  // ); //Query para verificar se já existe o item com o mesmo ID.
 
-  if (queryExists) {
-    // verificando se já existe a tarefa na lista.
-    msg = `<b>${val}<\/b> já existe. Não pode ser adicionado novamente.`;
+  if (original) {
+    // verificando se já existe a tarefa na lista. Se existir, então editá-lo.
+    msg = `<b>${original.textContent}<\/b> alterado para <b>${val}</b> com sucesso.`;
     codeMsg = 1;
+    let indexItem = itemsListStorage.findIndex(
+      (item) => item.item === original.textContent,
+    );
+    itemsListStorage[indexItem].item = val;
+    localStorage.setItem('tasks', JSON.stringify(itemsListStorage)); // Salvando ARRAY de itens no LocalSforage
+    listTasks.innerHTML = ''; //Limpando lista de tarefas
+    loadItemLS(); //Recarregando tarefas
   } else {
     msg = `<b>${val}<\/b> foi incluído na sua Lista de Tarefas!`;
-    addItem(val); //Adicionar item na lista de tarefas
-    saveItemLS(val); //Salvar lista em LocalStorage
+    addItem(val.replaceAll(' ', '__')); //Adicionar item na lista de tarefas
+    saveItemLS(val.replaceAll(' ', '__')); //Salvar lista em LocalStorage
   }
 
   messageShow(msg, codeMsg); // chamar função de mostrar mensagem
 
   nameTask.value = ''; //Apagando campo NOME DA TAREFA
 }
-//Functikn para Mendagem
+//Function para Mensagem
 function messageShow(txt, code = 0) {
   let divNew = document.createElement('div'); //Criando novo elemento PopUp
 
-  code == 1 && divNew.classList.add('error');
+  code == 1 && divNew.classList.add('suc');
 
   divNew.classList.add('message'); //Definindo classe do Popup
 
@@ -118,7 +149,10 @@ function addItem(nomeTarefa, doneStatus) {
   let label = document.createElement('label');
   label.setAttribute('for', nomeTarefa);
 
-  let html2 = `<div class="item-task"><span class="check"><\/span><span class="item-title">${nomeTarefa}</span><iconify-icon icon="material-symbols:delete-outline" style="color: rgba(0, 0, 0, 0.5);" width="24"></iconify-icon><iconify-icon icon="material-symbols:edit" style="color: rgba(56, 163, 39, .7);" width="24"></iconify-icon></div>`;
+  let html2 = `<div class="item-task"><span class="check"><\/span><span class="item-title">${nomeTarefa.replaceAll(
+    '__',
+    ' ',
+  )}</span><iconify-icon icon="material-symbols:delete-outline" style="color: rgba(0, 0, 0, 0.5);" width="24"></iconify-icon><iconify-icon icon="material-symbols:edit" style="color: rgba(56, 163, 39, .7);" width="24"></iconify-icon></div>`;
 
   label.innerHTML = html2;
   ipt.addEventListener('change', () => {
@@ -133,12 +167,33 @@ function addItem(nomeTarefa, doneStatus) {
     itemsListStorage[item_index_array].done = status;
     localStorage.setItem('tasks', JSON.stringify(itemsListStorage)); // Salvando LOCALSTORAGE
 
-    console.log(`Valor de ${nomeTarefa} alterado para ${status}`);
+    // console.log(`Valor de ${nomeTarefa} alterado para ${status}`);
   });
 
   ipt.appendChild(label);
   listTasks.appendChild(ipt);
   listTasks.appendChild(label);
+
+  //Click em DELETE
+  let icon = label.querySelectorAll('iconify-icon');
+  let icon_delete = icon[0];
+  let icon_edit = icon[1];
+
+  //Evento Click em DELETE
+  icon_delete.addEventListener('click', (event) => {
+    event.preventDefault();
+    ipt.remove();
+    label.remove();
+    let valores = itemsListStorage.filter((item) => item.item != nomeTarefa); //Filtro retirando a tarefa clicada.
+    localStorage.setItem('tasks', JSON.stringify(valores)); // Salvando ARRAY de itens no LocalSforage
+    // console.log('Valores excluídos.');
+  });
+
+  //Evento Click em EDIT
+  icon_edit.addEventListener('click', (event) => {
+    event.preventDefault();
+    addTask(nomeTarefa);
+  });
 
   // listTasks.innerHTML += html; // Adicionando novo item ao List Tasks.
 
