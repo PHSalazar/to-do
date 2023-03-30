@@ -8,9 +8,13 @@ Para incluir uma tarefa na lista, clique em "Adicionar uma tarefa" no rodapé da
 
 ![Adicionar tarefa](/assets/screenshots/capAdd.png)
 
-Para marcá-la como concluída, basta clicar em cima do nome da tarefa. Caso deseje editá-la, há um ícone de um lápis ao lado do nome da tarefa. Para excluí-la da sua lista, clique no ícone de uma lixeira do lado direito do nome da tarefa.
+Para marcá-la como concluída, basta clicar em cima do nome da tarefa. 
 
 ![Concluir tarefa](/assets/screenshots/capDone.png)
+
+
+Caso deseje editá-la, há um ícone de um lápis ao lado do nome da tarefa. Para excluí-la da sua lista, clique no ícone de uma lixeira do lado direito do nome da tarefa.
+
 ![Editar tarefa](/assets/screenshots/capEdit.png)
 
 Lembrando que as tarefas ficam salvas apenas no seu computador através do LocalStorage.
