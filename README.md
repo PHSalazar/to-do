@@ -1,3 +1,7 @@
+# Link do Projeto
+
+https://phsalazar.github.io/to-do/
+
 # Gerenciador de Tarefas
 
 O projeto foi criado para gerenciamento de tarefas com HTML, JS e CSS. Onde você consegue marcar as tarefas já feitas, filtrá-las, editá-las e mais.
