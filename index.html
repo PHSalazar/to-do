@@ -22,10 +22,12 @@
         <option value="2">Concluídas</option>
       </select>
       <h2 id="title-header">Minhas Tarefas</h2>
-      <p id="num-task">0 tarefas</p>
+      <p id="num-task"></p>
     </div>
 
-    <div id="list-tasks"></div>
+    <div id="list-tasks" class="no-tasks">
+      <p style="display: none;">Nenhuma tarefa cadastrada</p>
+    </div>
 
     <!-- Botão de Adicionar Novo Item -->
     <div id="add-newTask">
@@ -35,8 +37,10 @@
 
         <div id="form-newTask">
           <p>Para adicionar mais de 1 tarefa de uma vez, digite os nomes separado-as com uma vírgula (,).</p>
-          <input id="name-task" type="text" placeholder="Nome da Nova Tarefa">
-          <button id="save-newTask">Salvar Tarefa</button>
+          <form onsubmit="formAddTask" style="display: flex;flex-direction: column;">
+            <input id="name-task" type="text" placeholder="Nome da Nova Tarefa">
+            <button id="save-newTask" type="submit">Salvar Tarefa</button>
+          </form>
         </div>
       </div>
 

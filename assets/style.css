@@ -262,6 +262,14 @@ body {
   justify-content: center;
   color: #5C5C5C;
 }
+.no-tasks {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.no-tasks > p {
+  display: block !important;
+}
 
 @keyframes animaMessage {
   0% {

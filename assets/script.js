@@ -112,6 +112,20 @@ saveTask.addEventListener("click", () => {
   }
 });
 
+function formAddTask(event) {
+  event.preventDefault();
+
+  if (nameTask.value.includes(",")) {
+    let tarefas = nameTask.value;
+    let tarefasSeparadas = tarefas.split(",");
+    tarefasSeparadas.forEach((item) => {
+      salvarItem(item);
+    });
+  } else {
+    salvarItem();
+  }
+}
+
 // Function para adicionar Item
 function addItem(nomeTarefa, doneStatus) {
   let ipt = document.createElement("input");
@@ -212,9 +226,16 @@ function contarTarefas() {
   ); // Query para pegar todos os itena que estao visiveis
   let num = query.length; //Lendo tamanho da array de item-task
 
-  num == 1
-    ? (numTask.innerHTML = `${num} tarefa`)
-    : (numTask.innerHTML = `${num} tarefas`); //Arrow function para definir plural (texto) corretamente e substituindo texto da Div Num tasks
+  if (num == 0) {
+    numTask.innerHTML = "";
+    listTasks.classList.add("no-tasks");
+  } else if (num == 1) {
+    numTask.innerHTML = `${num} tarefa`;
+    listTasks.classList.remove("no-tasks");
+  } else if (num > 1) {
+    numTask.innerHTML = `${num} tarefas`;
+    listTasks.classList.remove("no-tasks");
+  }
 }
 
 //Function para Filtrar tarefas
