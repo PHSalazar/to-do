@@ -25,22 +25,13 @@
       <p id="num-task">0 tarefas</p>
     </div>
 
-    <div id="list-tasks">
-      <!-- Itens da Lista de Tarefas -->
-
-      <!-- Item LToDo de Exemplo -->
-      <!-- <input type="checkbox" name="tar1" id="tar1">
-      <label for="tar1">
-        <div class="item-task">Tarefa</div>
-      </label>-->
-
-    </div>
+    <div id="list-tasks"></div>
 
     <!-- Botão de Adicionar Novo Item -->
     <div id="add-newTask">
       <!-- Modal Adicionar Tarefa -->
       <div id="modal">
-        <p id="close-modal">x</p>
+        <p id="close-modal" onclick="modalAdicionarTarefa()">x</p>
 
         <div id="form-newTask">
           <p>Para adicionar mais de 1 tarefa de uma vez, digite os nomes separado-as com uma vírgula (,).</p>
@@ -49,7 +40,7 @@
         </div>
       </div>
 
-      <button id="btn-add-newTask"><iconify-icon icon="material-symbols:add-circle-rounded" style="color: #026c9c;" width="32"></iconify-icon> Adicionar uma tarefa</button>
+      <button id="btn-add-newTask" onclick="modalAdicionarTarefa()"><iconify-icon icon="material-symbols:add-circle-rounded" style="color: #026c9c;" width="32"></iconify-icon> Adicionar uma tarefa</button>
     </div>
 
     <!-- Mensagem Popup no caso de adicionar ou outra mensagem -->

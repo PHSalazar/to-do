@@ -222,7 +222,7 @@ body {
   gap: 5px;
 }
 
-.message {
+.alerta {
   background: #212121;
   border-radius: 4px;
   min-width: 200px;
@@ -238,19 +238,19 @@ body {
   transition: .6s;
 }
 
-.message.anim {
+.alerta.anim {
   animation: animaMessage 10s linear;
 }
 
-.message.error {
+.alerta.error {
   background: orangered;
 }
 
-.message.suc {
+.alerta.sucesso {
   background: green;
 }
 
-.message>button.close-popup {
+.alerta>button.close-popup {
   border: none;
   background: none;
   outline: none;

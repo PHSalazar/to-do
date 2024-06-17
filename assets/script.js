@@ -1,171 +1,146 @@
-const modal = document.getElementById('modal');
-const closeModal = document.getElementById('close-modal');
-const nameTask = document.getElementById('name-task');
-const btnAdd = document.getElementById('btn-add-newTask');
-const saveTask = document.getElementById('save-newTask');
-const message = document.getElementById('messages');
-const listTasks = document.getElementById('list-tasks');
-const numTask = document.getElementById('num-task');
-const filter = document.getElementById('filter');
-let itemsListStorage = JSON.parse(localStorage.getItem('tasks')) || [];
+// Seleção de Elementos HTML
+const modal = document.getElementById("modal");
+const closeModal = document.getElementById("close-modal");
+const nameTask = document.getElementById("name-task");
+const saveTask = document.getElementById("save-newTask");
+const message = document.getElementById("messages");
+const listTasks = document.getElementById("list-tasks");
+const numTask = document.getElementById("num-task");
+const filter = document.getElementById("filter");
+let itemsListStorage = JSON.parse(localStorage.getItem("tasks")) || [];
 
 // Function Add Task
 let ultItemClicado;
 
-function addTask(editar = undefined) {
-  modal.classList.toggle('show');
+function modalAdicionarTarefa(editar = undefined) {
+  modal.classList.toggle("show"); // alterar entre mostrar ou ocultar o modal
 
-  setTimeout(() => {
-    //Esperar 100ms para dar foco, evitando erro.
-    if (modal.classList.contains('show')) {
-      //Verificando se está ativo e definindo foco no campo para NOME DA TAREFA
-      nameTask.focus();
-    }
-  }, 100);
-
-  //Verificar se NOME está undefined (criar nova tarefa)
+  /*  Verificar se EDITAR está undefined (criar nova tarefa)
+      Se não estiver undefined, significa que está alterando uma tarefa já existente. */
   if (editar != undefined) {
-    nameTask.value = editar.replaceAll('__', ' ');
+    nameTask.value = editar.replaceAll("__", " ");
     ultItemClicado = editar;
-    saveTask.innerHTML = 'Editar Tarefa';
-    saveTask.setAttribute('f', 'edit');
+    saveTask.innerHTML = "Editar Tarefa";
+    saveTask.setAttribute("f", "edit");
     document.querySelector(
-      '#form-newTask > p',
+      "#form-newTask > p"
     ).innerHTML = `Alterando a tarefa: <i><b><span id='original-name'>${editar}</span></b></i>`;
   } else {
-    nameTask.value = '';
-    saveTask.setAttribute('f', 'add');
-    saveTask.innerHTML = 'Salvar Tarefa';
+    nameTask.value = "";
+    saveTask.setAttribute("f", "add");
+    saveTask.innerHTML = "Salvar Tarefa";
     document.querySelector(
-      '#form-newTask > p',
+      "#form-newTask > p"
     ).innerHTML = `Para adicionar mais de 1 tarefa de uma vez, digite os nomes separado-as com uma vírgula (,).`;
   }
-  // editar != undefined ? (nameTask.value = editar.replaceAll('__', ' ');console.log('')) : '';
 }
 
-//Click Add new Task
-btnAdd.addEventListener('click', () => {
-  addTask(); // Chamar Modal para Adicionar Novo item
-});
-
-// Function Close Modal
-closeModal.addEventListener('click', () => {
-  addTask(); //Fechar modal de Adicionar Novo Item
-});
-
+/* --------------------------------------
+------ FUNÇÕES RELACIONADAS AO MODAL ----
+---------------------------------------*/
 // Function Save Task
-function save(val = undefined) {
-  if (val == undefined) {
-    val = nameTask.value;
+function salvarItem(valorItem = undefined) {
+  if (valorItem == undefined) {
+    valorItem = nameTask.value;
   }
 
-  /*
-  
-  Antes só era possível adicionar um item a cada 8 segundos devido a animação do popup que esperava terminar parar atibar nvamente o botão de Adicionar.
-  // btnAdd.setAttribute('disabled', ''); //Desativando botão de Add para não causar conflito
-  //btnAdd.innerHTML = `<iconify-icon icon="circum:no-waiting-sign" width="32">><\/iconify-icon> Terminando de adicionar tarefa, aguarde...`; //Mudando texto do botão de Add
-  
-  */
-
-  modal.classList.remove('show'); //Fechando Modal
+  modal.classList.remove("show"); //Fechando Modal
 
   let msg, codeMsg; // Variavel da mensagem que será mostrado.
-  let original = document.querySelector('#original-name');
-
-  // let queryExists = itemsListStorage.findIndex(
-  //   (item) => item.item === originalName,
-  // ); //Query para verificar se já existe o item com o mesmo ID.
+  let original = document.querySelector("#original-name");
 
   if (original) {
     // verificando se já existe a tarefa na lista. Se existir, então editá-lo.
-    msg = `<b>${original.textContent}<\/b> alterado para <b>${val}</b> com sucesso.`;
+    msg = `<b>${original.textContent}<\/b> alterado para <b>${valorItem}</b> com sucesso.`;
     codeMsg = 1;
     let indexItem = itemsListStorage.findIndex(
-      (item) => item.item === original.textContent,
+      (item) => item.item === original.textContent
     );
-    itemsListStorage[indexItem].item = val;
-    localStorage.setItem('tasks', JSON.stringify(itemsListStorage)); // Salvando ARRAY de itens no LocalSforage
-    listTasks.innerHTML = ''; //Limpando lista de tarefas
-    loadItemLS(); //Recarregando tarefas
+    itemsListStorage[indexItem].item = valorItem;
+    localStorage.setItem("tasks", JSON.stringify(itemsListStorage)); // Salvando ARRAY de itens no LocalSforage
+    listTasks.innerHTML = ""; //Limpando lista de tarefas
+    carregarLocalStorage(); //Recarregando tarefas
+  } else if (valorItem.trim().length === 0) {
+    alert("Não é possível adicionar uma tarefa em branco.");
+    return;
   } else {
-    msg = `<b>${val}<\/b> foi incluído na sua Lista de Tarefas!`;
-    addItem(val.replaceAll(' ', '__')); //Adicionar item na lista de tarefas
-    saveItemLS(val.replaceAll(' ', '__')); //Salvar lista em LocalStorage
+    msg = `<b>${valorItem}<\/b> foi incluído na sua Lista de Tarefas!`;
+    addItem(valorItem.replaceAll(" ", "__")); //Adicionar item na lista de tarefas
+    salvarItemLocalStorage(valorItem.replaceAll(" ", "__")); //Salvar lista em LocalStorage
   }
 
-  messageShow(msg, codeMsg); // chamar função de mostrar mensagem
-
-  nameTask.value = ''; //Apagando campo NOME DA TAREFA
+  alerta(msg, codeMsg); // chamar função de mostrar mensagem
+  nameTask.value = ""; //Apagando campo NOME DA TAREFA
 }
-//Function para Mensagem
-function messageShow(txt, code = 0) {
-  let divNew = document.createElement('div'); //Criando novo elemento PopUp
 
-  code == 1 && divNew.classList.add('suc');
+//Function para alert
+function alerta(txt, code = 0) {
+  let divNew = document.createElement("div"); //Criando novo elemento PopUp
 
-  divNew.classList.add('message'); //Definindo classe do Popup
+  code == 1 && divNew.classList.add("sucesso");
+
+  divNew.classList.add("alerta"); //Definindo classe do Popup
 
   divNew.innerHTML = `${txt}<button class="close-popup">x</button>`; //Definindo messagem Popup
   message.appendChild(divNew); //Adicionando novo Popup
 
-  const q = divNew.querySelector('button');
-  q.addEventListener('click', () => {
-    closePopup(divNew);
-  }); // Function para Close Popup criado
+  const q = divNew.querySelector("button");
+  q.addEventListener("click", () => {
+    divNew.remove(); // Fechar alert
+  });
 
-  message.classList.add('anim'); //Adicionar Classe com animação
+  message.classList.add("anim"); //Adicionar Classe com animação
   setTimeout(() => {
     divNew.remove(); //Removendo Elemento de Popup
   }, 8000);
 }
 
-// Function Close Popup
-function closePopup(ele) {
-  ele.remove();
-}
+/*----------------------------------------------------------------------------
+----------- Funções Relacionadas à Manipulação da Lista de Tarefas -----------
+----------------------------------------------------------------------------*/
 
-// Click Save Task
-saveTask.addEventListener('click', () => {
-  if (nameTask.value.includes(',')) {
-    let v = nameTask.value;
-    let s = v.split(',');
-    s.forEach((item) => {
-      save(item);
+// Clique para salvar tarefa (dentro do Modal)
+saveTask.addEventListener("click", () => {
+  if (nameTask.value.includes(",")) {
+    let tarefas = nameTask.value;
+    let tarefasSeparadas = tarefas.split(",");
+    tarefasSeparadas.forEach((item) => {
+      salvarItem(item);
     });
   } else {
-    save();
+    salvarItem();
   }
 });
 
 // Function para adicionar Item
 function addItem(nomeTarefa, doneStatus) {
-  let ipt = document.createElement('input');
-  ipt.checked = doneStatus == true ? 'checked' : '';
-  ipt.type = 'checkbox';
-  ipt.setAttribute('name', nomeTarefa);
-  ipt.classList.add('item-ipt');
+  let ipt = document.createElement("input");
+  ipt.checked = doneStatus == true ? "checked" : "";
+  ipt.type = "checkbox";
+  ipt.setAttribute("name", nomeTarefa);
+  ipt.classList.add("item-ipt");
   ipt.id = nomeTarefa;
 
-  let label = document.createElement('label');
-  label.setAttribute('for', nomeTarefa);
+  let label = document.createElement("label");
+  label.setAttribute("for", nomeTarefa);
 
   let html2 = `<div class="item-task"><span class="check"><\/span><span class="item-title">${nomeTarefa.replaceAll(
-    '__',
-    ' ',
+    "__",
+    " "
   )}</span><iconify-icon icon="material-symbols:delete-outline" style="color: rgba(0, 0, 0, 0.5);" width="24"></iconify-icon><iconify-icon icon="material-symbols:edit" style="color: rgba(56, 163, 39, .7);" width="24"></iconify-icon></div>`;
 
   label.innerHTML = html2;
-  ipt.addEventListener('change', () => {
+  ipt.addEventListener("change", () => {
     let status = ipt.checked;
 
     // Procurando Index de NOME_TAREFA
     let item_index_array = itemsListStorage.findIndex(
-      (obj) => obj.item == nomeTarefa,
+      (obj) => obj.item == nomeTarefa
     );
 
     //Update Status DONE
     itemsListStorage[item_index_array].done = status;
-    localStorage.setItem('tasks', JSON.stringify(itemsListStorage)); // Salvando LOCALSTORAGE
+    localStorage.setItem("tasks", JSON.stringify(itemsListStorage)); // Salvando LOCALSTORAGE
 
     // console.log(`Valor de ${nomeTarefa} alterado para ${status}`);
   });
@@ -175,60 +150,65 @@ function addItem(nomeTarefa, doneStatus) {
   listTasks.appendChild(label);
 
   //Click em DELETE
-  let icon = label.querySelectorAll('iconify-icon');
+  let icon = label.querySelectorAll("iconify-icon");
   let icon_delete = icon[0];
   let icon_edit = icon[1];
 
   //Evento Click em DELETE
-  icon_delete.addEventListener('click', (event) => {
+  icon_delete.addEventListener("click", (event) => {
     event.preventDefault();
     ipt.remove();
     label.remove();
+    recarregarLocalStorage();
+    contarTarefas();
     let valores = itemsListStorage.filter((item) => item.item != nomeTarefa); //Filtro retirando a tarefa clicada.
-    localStorage.setItem('tasks', JSON.stringify(valores)); // Salvando ARRAY de itens no LocalSforage
-    // console.log('Valores excluídos.');
+    localStorage.setItem("tasks", JSON.stringify(valores)); // Salvando ARRAY de itens no LocalSforage
+    console.log(valores);
   });
 
   //Evento Click em EDIT
-  icon_edit.addEventListener('click', (event) => {
+  icon_edit.addEventListener("click", (event) => {
     event.preventDefault();
-    addTask(nomeTarefa);
+    modalAdicionarTarefa(nomeTarefa);
   });
 
-  // listTasks.innerHTML += html; // Adicionando novo item ao List Tasks.
-
-  countTasks(); //Contando itens na Lista de Tarefas
+  contarTarefas(); //Contando itens na Lista de Tarefas
 }
 
-//Function para Remover Tarefa
-function removeTask() {
-  let tsk = document.querySelectorAll(`.item-ipt`);
-  tsk.forEach((item) => {
-    console.log(item);
-  });
-}
-
-//Function Add localstorage
-function saveItemLS(item) {
+/*---------------------------------
+------- FUNÇÕES PARA SALVAR NO LOCALSTORAGE
+-------------------------------- */
+function salvarItemLocalStorage(item) {
   const item_array = { item: item, done: false };
   itemsListStorage.push(item_array);
 
-  localStorage.setItem('tasks', JSON.stringify(itemsListStorage)); // Salvando ARRAY de itens no LocalSforage
+  localStorage.setItem("tasks", JSON.stringify(itemsListStorage)); // Salvando ARRAY de itens no LocalSforage
 }
 
 //Function Load LocalStorage
-function loadItemLS() {
+function carregarLocalStorage() {
   //Adicionando item para cada Item que já foi salvo em LOCALSTORAGE
   itemsListStorage.map(({ item, done }) => {
     addItem(item, done);
   });
 }
-loadItemLS();
+carregarLocalStorage();
 
-// Function Count Tasks
-function countTasks() {
+function getLocalStorage() {
+  return localStorage.getItem("tasks");
+}
+
+function recarregarLocalStorage() {
+  itemsListStorage = JSON.parse(localStorage.getItem("tasks")) || [];
+}
+
+/* ---------------
+---- Funções Relacionadas ao Filtro de Tarefas
+----------------*/
+
+function contarTarefas() {
   let query = document.querySelectorAll(
-    '#list-tasks input[type=checkbox] + label:not(.hide)',
+    "#list-tasks input[type=checkbox] + label:not(.hide)"
   ); // Query para pegar todos os itena que estao visiveis
   let num = query.length; //Lendo tamanho da array de item-task
 
@@ -242,39 +222,39 @@ function onFilter() {
   let query;
 
   switch (filter.value) {
-    case '0':
-      removeFilter(); // Remover todos os filtros
+    case "0":
+      removerFiltro(); // Remover todos os filtros
       break;
-    case '1':
-      removeFilter(); // Remover todos os filtros antes de aplicar um novo PENDINH
+    case "1":
+      removerFiltro(); // Remover todos os filtros antes de aplicar um novo
       query = document.querySelectorAll(
-        '#list-tasks input[type=checkbox]:checked + label',
+        "#list-tasks input[type=checkbox]:checked + label"
       );
       query.forEach((item) => {
-        item.classList.add('hide'); // adicionar a classe HIDE em todos os itens concluidos
+        item.classList.add("hide"); // adicionar a classe HIDE em todos os itens concluidos
       });
       break;
-    case '2':
-      removeFilter(); // Remove todos os filtros antes de aplicar um DONE
+    case "2":
+      removerFiltro(); // Remove todos os filtros antes de aplicar um DONE
       query = document.querySelectorAll(
-        '#list-tasks input[type=checkbox]:not(:checked) + label',
+        "#list-tasks input[type=checkbox]:not(:checked) + label"
       );
       query.forEach((item) => {
-        item.classList.add('hide'); // Adicionar a classe HIDE em todos os itens PENDENTES
+        item.classList.add("hide"); // Adicionar a classe HIDE em todos os itens PENDENTES
       });
       break;
   }
 }
 
 // Function para remover filter
-function removeFilter() {
-  query = document.querySelectorAll('#list-tasks > label'); // Query para selecionar todos os itens
+function removerFiltro() {
+  query = document.querySelectorAll("#list-tasks > label"); // Query para selecionar todos os itens
   query.forEach((item) => {
-    item.classList.remove('hide'); // removendo a classe HIDE de todos os itens
+    item.classList.remove("hide"); // removendo a classe HIDE de todos os itens
   });
 }
 
-filter.addEventListener('change', () => {
+filter.addEventListener("change", () => {
   onFilter(); //Definindo filtros
-  countTasks(); // Contar itens selecionados no filtro
+  contarTarefas(); // Recontar itens selecionados no filtro
 });
